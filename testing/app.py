@@ -12,17 +12,10 @@ def pinging_py():
 
 def pinging_2():
     while True:
-        res = subprocess.Popen(['curl' ,'-s', '--location' , '--request' , 'GET' , 'https://lambda-smartbankapp.api.cloudtech-training.com'])
+        res = subprocess.Popen(['curl' ,'-s', '--location' , '--request' , 'GET' , 'https://lambda-smartbankapp.api.cloudtech-training.com/'])
         # res = subprocess.Popen(['curl --location --request GET https://lambda-smartbankapp.api.cloudtech-training.com'],shell=True)
         # ping_address = subprocess.Popen(['nslookup' ' lambda-smartbankapp.api.cloudtech-training.com'],shell=True)
         # print(ping_address)
-        if res == 0:
-            print("Ping successfully done")
-        elif res ==2:
-            print("No Respoonse from address")
-        else:
-            print("Failed")
-        time.sleep(1)
 
 
 
