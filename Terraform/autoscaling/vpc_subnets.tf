@@ -52,11 +52,11 @@ resource "aws_subnet" "kushagra-vpc-pvt-1b" {
 
 #INTERNET_GATEWAY => Only for Public Subnets
 
-resource "aws_internet_gateway" "kushara-vpc-igw" {
-    vpc_id=aws_vpc.kushagra-vpc.id
-    tags = {
-      Name = "kushagra-vpc-igw"
-    }
+resource "aws_internet_gateway" "kushagra-vpc-igw" {
+  vpc_id = aws_vpc.kushagra-vpc.id
+  tags ={
+    Name = "kushagra-vpc-igw"
+  }
 }
 
 #NAT_GATEWAY => Only for Private subnets 
@@ -81,7 +81,7 @@ resource "aws_route_table" "kushagra-vpc-rt-pb" {
     vpc_id = aws_vpc.kushagra-vpc.id
     route{
         cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.kushara-vpc-igw.id
+    gateway_id = aws_internet_gateway.kushagra-vpc-igw.id
     }
     tags ={
         Name = "kushagra-vpc-rt-pb"
