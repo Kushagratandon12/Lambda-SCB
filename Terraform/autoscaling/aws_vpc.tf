@@ -1,17 +1,17 @@
 #VPC Creation
-resource "aws_vpc" "kushagra_vpc" {
+resource "aws_vpc" "kushagra-vpc" {
     cidr_block = "10.0.0.0/16"
     enable_dns_support = true
     enable_dns_hostnames = true
     tags = {
-      Name = "kushagra_vpc"
+      Name = "kushagra-vpc"
     }
 }
 
 #SUBNET CREATION
 
-resource "aws_subnet" "kushagra_vpc-pb-1a" {
-    vpc_id = aws_vpc.kushagra_vpc.id
+resource "aws_subnet" "kushagra-vpc-pb-1a" {
+    vpc_id = aws_vpc.kushagra-vpc.id
     cidr_block = "10.0.1.0/24"
     availability_zone = "ap-south-1a"
         map_public_ip_on_launch = true
@@ -30,7 +30,7 @@ resource "aws_subnet" "kushagra-vpc-pvt-1a" {
 }
 
 resource "aws_subnet" "kushagra-vpc-pb-1b" {
-    vpc_id = aws_vpc.kushagra_vpc.id
+    vpc_id = aws_vpc.kushagra-vpc.id
     cidr_block = "10.0.3.0/24"
     availability_zone = "ap-south-1b"
     map_public_ip_on_launch = true
@@ -53,7 +53,7 @@ resource "aws_subnet" "kushagra-vpc-pvt-1b" {
 #INTERNET_GATEWAY => Only for Public Subnets
 
 resource "aws_internet_gateway" "kushara-vpc-igw" {
-    vpc_id=aws_vpc.kushagra_vpc.id
+    vpc_id=aws_vpc.kushagra-vpc.id
     tags = {
       Name = "kushagra-vpc-igw"
     }
@@ -67,7 +67,7 @@ resource "aws_eip" "nat_gateway" {
 
 resource "aws_nat_gateway" "kushagra-vpc-nat-gw" {
     allocation_id = aws_eip.nat_gateway.id
-    subnet_id     = aws_subnet.kushagra_vpc-pb-1a.id
+    subnet_id     = aws_subnet.kushagra-vpc-pb-1a.id
 
     tags = {
         Name = "kushagra-vpc-nat-gw"
@@ -78,7 +78,7 @@ resource "aws_nat_gateway" "kushagra-vpc-nat-gw" {
 #ROUTE-TABLE CREATION
 
 resource "aws_route_table" "kushagra-vpc-rt-pb" {
-    vpc_id = aws_vpc.kushagra_vpc.id
+    vpc_id = aws_vpc.kushagra-vpc.id
     route{
         cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.kushara-vpc-igw.id
@@ -103,7 +103,7 @@ resource "aws_route_table" "kushagra-vpc-rt-pvt" {
 
 #ROUTE-TABLE ASSOCIATIONG
 resource "aws_route_table_association" "pb-1a" {
-    subnet_id      = aws_subnet.kushagra_vpc-pb-1a.id
+    subnet_id      = aws_subnet.kushagra-vpc-pb-1a.id
     route_table_id = aws_route_table.kushagra-vpc-rt-pb.id
 }
 
