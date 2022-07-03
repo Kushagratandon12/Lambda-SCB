@@ -1,3 +1,5 @@
 Terraform/autoscaling/.terraform.lock.hcl
 Terraform/autoscaling/.terraform/providers/registry.terraform.io/hashicorp/aws/4.10.0/linux_amd64/terraform-provider-aws_v4.10.0_x5
 Terraform/autoscaling/terraform.tfstate
+Terraform/autoscaling/.terraform.tfstate.lock.info
+Terraform/autoscaling/terraform.tfstate.backup
