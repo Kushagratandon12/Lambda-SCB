@@ -54,8 +54,12 @@ spec:
         env:
           - name: spring.datasource.url
             value: jdbc:postgresql://postgres:5432/app
+          - name: spring.datasource.username
+            value: postgres
+          - name: spring.datasource.password
+            value: postgres
           - name: spring.application.name
-            value: apiserver-kushagra
+            value: apiserver
           - name: server.port
             value: "8080"
           - name: ELASTIC_APM_SERVER_URL 

@@ -4,4 +4,4 @@ metadata:
   name: app-config
 data:
   ELASTIC_APM_SERVER_URL: "http://apm-server.elasticsearch.svc.cluster.local:8200"
-  ELASTIC_APM_APPLICATION_PACKAGES: "in.brainupgrade" 
+  ELASTIC_APM_APPLICATION_PACKAGES: "in.brainupgrade"
