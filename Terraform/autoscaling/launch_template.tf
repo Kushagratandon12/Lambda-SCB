@@ -6,7 +6,7 @@ resource "aws_launch_template" "kushagra-template" {
 }
 
 resource "aws_autoscaling_group" "kushagra-autoscale" {
-    availability_zones        = ["ap-south-1"]
+    availability_zones        = ["ap-south-1a"]
     name                      = "kushagra-autoscale"
     max_size                  = 3
     min_size                  = 1
@@ -23,45 +23,25 @@ resource "aws_autoscaling_group" "kushagra-autoscale" {
 
 resource "aws_autoscaling_policy" "test" {
   name                   = "test"
+  adjustment_type        = "ChangeInCapacity"
   autoscaling_group_name = aws_autoscaling_group.kushagra-autoscale.name
-  policy_type            = "PredictiveScaling"
-  predictive_scaling_configuration {
-    metric_specification {
-      target_value = 10
-      predefined_load_metric_specification {
-        predefined_metric_type = "ASGTotalCPUUtilization"
-        resource_label         = "test"
-      }
-      customized_scaling_metric_specification {
-        metric_data_queries {
-          id = "scaling"
-          metric_stat {
-            metric {
-              metric_name = "CPUUtilization"
-              namespace   = "AWS/EC2"
-              dimensions {
-                name  = "AutoScalingGroupName"
-                value = "test"
-              }
-            }
-            stat = "Average"
-          }
-        }
-      }
-    }
-  }
+  scaling_adjustment     = 2
+  cooldown               = 180
 }
 
 data "aws_vpc" "main"{
     id="vpc-07ba180c1c26e2f4c"
 }
 
-data "aws_subnet_ids" "main" {
+data "aws_subnet_ids" "test" {
   vpc_id = data.aws_vpc.main.id
+  tags = {  
+    Name = "kushagra-vpc-pb-1a"
+  }
 }
 
-data "aws_subnet" "kushagra-vpc" {
-    vpc_id = data.aws_subnet_ids.main.ids
+data "aws_subnet" "test" {
+    for_each = data.aws_subnet_ids.test.ids
     id = each.value
 }
 
@@ -69,13 +49,13 @@ resource "aws_lb" "kushagra-loadbalancer"{
     name = "kushagra-loadbalancer"
     internal = false
     load_balancer_type = "network"
-    subnets = [aws_subnet.kushagra-vpc-pb-1a.aws_subnet.kushagra-vpc-pb-1a.id]
+      subnets            = [for subnet in data.aws_subnet.test : subnet.id]
 }
 
 resource "aws_lb_listener" "kushagra-loadbalancer" {
-    load_balancer_arn = aws_lb.kushagra.arn
+    load_balancer_arn = aws_lb.kushagra-loadbalancer.arn
     port = 80
-    provider = "TCP"
+    protocol = "TCP"
     default_action {
         type="forward"
         target_group_arn = aws_lb_target_group.kushagra.arn
