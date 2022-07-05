@@ -42,7 +42,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                - web-server
+                - frontend
             topologyKey: "kubernetes.io/hostname"
       volumes: 
       - name: elastic-apm-agent 
