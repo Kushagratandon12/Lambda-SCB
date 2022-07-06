@@ -46,10 +46,11 @@ spec:
           httpGet:
             path: /
             port: 80
-          initialDelaySeconds: 5
+            # scheme: HTTPS
+          initialDelaySeconds: 50
           periodSeconds: 5
           successThreshold: 1
-          failureThreshold: 1
+          failureThreshold: 2
         volumeMounts:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
