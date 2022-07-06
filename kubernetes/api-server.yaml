@@ -105,3 +105,11 @@ spec:
             value: "true"
           - name: management.metrics.tags.application
             value: apiserver-kushagra
+      livenessProbe:
+        httpGet:
+          path: /api/
+          port: 80
+        initialDelaySeconds: 10
+        periodSeconds: 60
+        successThreshold: 1
+        failureThreshold: 3

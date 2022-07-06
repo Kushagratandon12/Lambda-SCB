@@ -50,6 +50,14 @@ spec:
         - name: nginx-config
           configMap:
             name: ambassador-nginx-config
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 10
+        periodSeconds: 60
+        successThreshold: 1
+        failureThreshold: 3
 
 ---
 apiVersion: v1
