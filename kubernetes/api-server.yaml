@@ -64,6 +64,14 @@ spec:
       containers:
       - image: kushagratandon12/smart_bank_backend:k8s
         name: sba-apiserver
+        livenessProbe:
+          httpGet:
+            path: /api/
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 60
+          successThreshold: 1
+          failureThreshold: 3
         imagePullPolicy: Always
         volumeMounts: 
         - mountPath: /elastic/apm/agent 
@@ -105,11 +113,3 @@ spec:
             value: "true"
           - name: management.metrics.tags.application
             value: apiserver-kushagra
-      livenessProbe:
-        httpGet:
-          path: /api/
-          port: 80
-        initialDelaySeconds: 10
-        periodSeconds: 60
-        successThreshold: 1
-        failureThreshold: 3
