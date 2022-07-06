@@ -51,15 +51,15 @@ spec:
           periodSeconds: 5
           successThreshold: 1
           failureThreshold: 2
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-            # scheme: HTTPS
-          initialDelaySeconds: 30
-          periodSeconds: 5
-          successThreshold: 1
-          failureThreshold: 2
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 80
+        #     # scheme: HTTPS
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 5
+        #   successThreshold: 1
+        #   failureThreshold: 2
         volumeMounts:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
