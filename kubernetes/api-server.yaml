@@ -67,9 +67,18 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 80
             # scheme: HTTPS
-          initialDelaySeconds: 50
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2
+        redinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            # scheme: HTTPS
+          initialDelaySeconds: 30
           periodSeconds: 5
           successThreshold: 1
           failureThreshold: 2
