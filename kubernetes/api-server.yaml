@@ -68,10 +68,10 @@ spec:
           httpGet:
             path: /api/
             port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 60
+          initialDelaySeconds: 3
+          periodSeconds: 15
           successThreshold: 1
-          failureThreshold: 3
+          failureThreshold: 1
         imagePullPolicy: Always
         volumeMounts: 
         - mountPath: /elastic/apm/agent 

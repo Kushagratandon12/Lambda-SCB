@@ -45,11 +45,11 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: nginx
-          initialDelaySeconds: 15
-          periodSeconds: 60
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 15
           successThreshold: 1
-          failureThreshold: 3
+          failureThreshold: 1
         volumeMounts:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
