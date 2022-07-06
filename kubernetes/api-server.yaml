@@ -83,6 +83,11 @@ spec:
           successThreshold: 1
           failureThreshold: 2
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
         volumeMounts: 
         - mountPath: /elastic/apm/agent 
           name: elastic-apm-agent          
