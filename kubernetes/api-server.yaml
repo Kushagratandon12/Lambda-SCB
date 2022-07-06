@@ -64,13 +64,13 @@ spec:
       containers:
       - image: kushagratandon12/smart_bank_backend:k8s
         name: sba-apiserver
-        readinessProbe:
+        startupProbe:
           httpGet:
             path: /api
             port: 80
             scheme: HTTPS
-          initialDelaySeconds: 10
-          periodSeconds: 2
+          initialDelaySeconds: 0
+          periodSeconds: 5
           successThreshold: 1
           failureThreshold: 2
         imagePullPolicy: Always
