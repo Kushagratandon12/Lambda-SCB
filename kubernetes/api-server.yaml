@@ -68,8 +68,8 @@ spec:
           httpGet:
             path: /api/
             port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 15
+          initialDelaySeconds: 5
+          periodSeconds: 5
           successThreshold: 1
           failureThreshold: 1
         imagePullPolicy: Always
