@@ -67,9 +67,9 @@ spec:
         livenessProbe:
           httpGet:
             path: /api
-            port: 80
+            port: 8080
             # scheme: HTTPS
-          initialDelaySeconds: 110
+          initialDelaySeconds: 50
           periodSeconds: 5
           successThreshold: 1
           failureThreshold: 2
