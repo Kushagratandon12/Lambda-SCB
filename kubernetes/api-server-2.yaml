@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apiserver-usage
+  name: apiserver-usage
+spec:
+  ports:
+  - name: 80-8080
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: apiserver-usage
+  type: ClusterIP
+---  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apiserver-usage
+  name: apiserver-usage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apiserver-usage
+  template:
+    metadata:
+      labels:
+        app: apiserver-usage
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8888"
+        prometheus.io/path: /actuator/prometheus        
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: one-pod-per-zone
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - frontend
+            topologyKey: "kubernetes.io/hostname"
+      volumes: 
+      - name: elastic-apm-agent 
+        emptyDir: {}    
+      initContainers: 
+      - name: elastic-java-agent 
+        image: docker.elastic.co/observability/apm-agent-java:1.12.0 
+        volumeMounts: 
+        - mountPath: /elastic/apm/agent 
+          name: elastic-apm-agent 
+        command: ['cp', '-v', '/usr/agent/elastic-apm-agent.jar', '/elastic/apm/agent']     
+      containers:
+      - image: kushagratandon12/smart_bank_backend:dynamodb
+        name: sba-apiserver
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            # scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            # scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+        volumeMounts: 
+        - mountPath: /elastic/apm/agent 
+          name: elastic-apm-agent          
+        env:
+          - name: spring.datasource.url
+            value: jdbc:postgresql://postgres:5432/app
+          - name: spring.datasource.username
+            value: postgres
+          - name: spring.datasource.password
+            value: postgres
+          - name: spring.application.name
+            value: apiserver
+          - name: server.port
+            value: "8080"
+          - name: ELASTIC_APM_SERVER_URL 
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: ELASTIC_APM_SERVER_URL
+          - name: ELASTIC_APM_APPLICATION_PACKAGES 
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: ELASTIC_APM_APPLICATION_PACKAGES
+          - name: ELASTIC_APM_SERVICE_NAME 
+            value: "apiserver-kushagra" 
+          - name: ELASTIC_APM_ENVIRONMENT 
+            value: prod
+          - name: ELASTIC_APM_LOG_LEVEL 
+            value: DEBUG 
+          - name: JAVA_TOOL_OPTIONS 
+            value: -javaagent:/elastic/apm/agent/elastic-apm-agent.jar               
+          - name: management.endpoints.web.exposure.include
+            value: "*"
+          - name: management.server.port
+            value: "8888"
+          - name: management.metrics.web.server.request.autotime.enabled
+            value: "true"
+          - name: management.metrics.tags.application
+            value: apiserver-kushagra
