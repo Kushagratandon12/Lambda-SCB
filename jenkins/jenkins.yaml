@@ -49,7 +49,7 @@ spec:
         - if [ ! -f $JENKINS_HOME ]; then chown $UID:$UID -R $JENKINS_HOME; touch $JENKINS_HOME; chown $UID:$UID $JENKINS_HOME; fi
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts-jdk11
+          image: brainupgrade/jenkins:kubectl
           securityContext:
             runAsUser: 0          
           env:
