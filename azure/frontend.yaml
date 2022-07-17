@@ -1,0 +1,8 @@
+#!/bin/bash
+sudo su 
+sudo apt-get update
+sudo apt install docker.io -y
+sudo systemctl enable docker
+sudo systemctl start docker
+
+docker run -d -p 80:8080 --env spring.datasource.username=postgres --env spring.datasource.password=smartbank2307# --env spring.datasource.url=jdbc:postgresql://lambda-db.postgres.database.azure.com/smartbankapp anshshrivastava/smartbankapi:v4
